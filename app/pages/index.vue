@@ -6,7 +6,6 @@
     </h2> -->
     <SearchBar class="mt-8" />
     <BreadList class="mt-8" />
-    <QuantitySelector class="mt-8" />
     <OtherOptions class="mt-8" />
     <!-- <button
       class="w-full px-4 py-3 rounded-2xl border border-black/20 bg-[#FDE4BA] text-sm text-[#3D3C3A] font-semibold mt-8 hover:bg-[#fcd58a] transition"
