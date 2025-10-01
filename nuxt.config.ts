@@ -15,5 +15,16 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "@nuxt/test-utils",
     "@nuxt/ui",
+    "@nuxtjs/google-fonts",
   ],
+  googleFonts: {
+    families: {
+      Inter: [400, 700],
+      Poppins: [400, 700],
+      Pacifico: [400],
+      Courgette: [400],
+    },
+    display: "swap",
+  },
+  
 });
