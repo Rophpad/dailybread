@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+:root {
+    --primary-color: #FDE4BA;
+    --background-color: #FAF9F0;
+    --font-family: "KefirVariable", "Poppins", sans-serif;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background-color);
+}
