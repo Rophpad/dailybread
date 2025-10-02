@@ -1,80 +1,61 @@
-import { defineStore } from 'pinia'
-import { breads, accompaniments } from '~/data/datas'
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import type { Product } from "~/types/product";
 
-export interface CartItem {
-  id: string
-  name: string
-  price: string
-  image: string
-  quantity: number
-  type: 'bread' | 'accompaniment'
-}
+export const useCartStore = defineStore(
+  "cart",
+  () => {
+    const cartItems = ref<Product[]>([]);
 
-export const useCartStore = defineStore('cart', {
-  state: () => ({
-    items: [] as CartItem[],
-    isOpen: false
-  }),
+    const getCartItems = () => {
+      return cartItems.value;
+    };
 
-  getters: {
-    itemCount: (state) => state.items.reduce((total, item) => total + item.quantity, 0),
-    
-    totalPrice: (state) => {
-      return state.items.reduce((total, item) => {
-        const price = parseFloat(item.price.replace('$', ''))
-        return total + (price * item.quantity)
-      }, 0)
-    },
-
-    cartItems: (state) => state.items
-  },
-
-  actions: {
-    addItem(item: Omit<CartItem, 'id'>) {
-      const existingItem = this.items.find(
-        cartItem => cartItem.name === item.name && cartItem.type === item.type
-      )
-
-      if (existingItem) {
-        existingItem.quantity += item.quantity
+    const addToCart = (item: Product) => {
+      item.inTheCart = true;
+      const index = cartItems.value.findIndex(
+        (cartItem) => cartItem.id === item.id
+      );
+      if (index !== -1) {
+        cartItems.value[index] = { ...cartItems.value[index], ...item };
       } else {
-        this.items.push({
-          ...item,
-          id: `${item.type}-${item.name}-${Date.now()}`
-        })
+        cartItems.value.push({ ...item });
       }
-    },
+    };
 
-    removeItem(id: string) {
-      const index = this.items.findIndex(item => item.id === id)
-      if (index > -1) {
-        this.items.splice(index, 1)
-      }
-    },
-
-    updateQuantity(id: string, quantity: number) {
-      const item = this.items.find(item => item.id === id)
+    const removeFromCart = (id: number) => {
+      const item = cartItems.value.find((item) => item.id === id);
       if (item) {
-        if (quantity <= 0) {
-          this.removeItem(id)
-        } else {
-          item.quantity = quantity
-        }
+        item.inTheCart = false;
       }
-    },
+      cartItems.value = cartItems.value.filter((item) => item.id !== id);
+    };
 
-    clearCart() {
-      this.items = []
-    },
+    const clearCart = () => {
+      cartItems.value = [];
+    };
 
-    toggleCart() {
-      this.isOpen = !this.isOpen
-    }
+    const getTotalPrice = () => {
+      return cartItems.value.reduce((total, item) => {
+        const priceNumber = parseFloat(item.price.replace("$", ""));
+        return total + priceNumber * item.quantity;
+      }, 0);
+    };
+
+    return {
+      cartItems,
+      getCartItems,
+      addToCart,
+      removeFromCart,
+      clearCart,
+      getTotalPrice,
+    };
+  },
+  {
+    // Add persistence configuration
+    persist: {
+      key: "dailybread-cart",
+      storage: persistedState.localStorage,
+    },
   }
-})
-
-// If you are using pinia-plugin-persistedstate, add this to your store definition instead:
-// export const useCartStore = defineStore('cart', {
-//   ...store options...
-//   persist: true
-// })
+);

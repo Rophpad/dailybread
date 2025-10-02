@@ -1,16 +1,33 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { breads } from "../data/datas";
+import { useProductsStore } from "~/stores/products";
+import { useCartStore } from "~/stores/cart";
 import QuantitySelector from "./QuantitySelector.vue";
+
+// Store
+const productsStore = useProductsStore();
+productsStore.getAllBreads();
+const breads = productsStore.breads;
+
+const cartStore = useCartStore();
 
 // State
 const currentIndex = ref(0);
 const carouselRef = ref<HTMLElement>();
 
 // Computed
-const items = computed(() => breads);
+const items = computed(() =>
+  breads.map(bread => ({
+    ...bread,
+    inTheCart: cartStore.cartItems.some(item => item.id === bread.id),
+    quantity:
+      cartStore.cartItems.find(item => item.id === bread.id)?.quantity || bread.quantity || 1
+  }))
+);
 const currentItem = computed(() => items.value[currentIndex.value]);
-const slideTransform = computed(() => `translateX(-${currentIndex.value * 100}%)`);
+const slideTransform = computed(
+  () => `translateX(-${currentIndex.value * 100}%)`
+);
 
 // Navigation methods
 const nextSlide = () => {
@@ -29,8 +46,14 @@ const goToSlide = (index: number) => {
 // Cart methods
 const toggleCart = () => {
   if (currentItem.value) {
-    currentItem.value.addedToCart = !currentItem.value.addedToCart;
+    if (!currentItem.value.inTheCart) {
+      cartStore.addToCart(currentItem.value);
+    } else {
+      cartStore.removeFromCart(currentItem.value.id);
+      productsStore.setInTheCartStatus(currentItem.value.id);
+    }
   }
+  console.log(cartStore.cartItems, currentItem.value?.inTheCart);
 };
 
 // Quantity handler
@@ -137,8 +160,8 @@ const updateQuantity = (newQuantity: number) => {
       </div>
 
       <!-- Quantity Selector -->
-      <QuantitySelector 
-        class="mb-6" 
+      <QuantitySelector
+        class="mb-6"
         :modelValue="currentItem.quantity || 1"
         @update:modelValue="updateQuantity"
       />
@@ -148,12 +171,12 @@ const updateQuantity = (newQuantity: number) => {
         @click="toggleCart"
         class="w-full rounded-xl py-3 text-base font-semibold shadow-md transition-all duration-200 active:scale-98"
         :class="
-          currentItem.addedToCart
+          currentItem.inTheCart
             ? 'bg-[#f38168] text-white hover:bg-[#f38168]'
             : 'bg-[#8B4513] text-white hover:bg-[#A0522D]'
         "
       >
-        {{ currentItem.addedToCart ? 'Retirer du panier' : 'Ajouter au panier' }}
+        {{ currentItem.inTheCart ? "Retirer du panier" : "Ajouter au panier" }}
       </button>
     </div>
   </div>
