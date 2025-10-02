@@ -1,9 +1,9 @@
 <template>
-  <section class="border  p-8 w-full">
-    <!-- <h2 class="text-center text-xl font-bold text-[#3D3C3A]"  style="font-family: 'Pacifico';">
+  <section class="px-8 w-full">
+    <h2 class="mt-8 text-center text-xl font-bold text-[#3D3C3A]" >
       Get your daily bread <br />
       easily, everyday and everywhere!
-    </h2> -->
+    </h2>
     <SearchBar class="mt-8" />
     <BreadList class="mt-8" />
     <OtherOptions class="mt-8" />

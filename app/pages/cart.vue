@@ -1,6 +1,6 @@
 <template>
-  <section class="p-8 w-full">
-    <h1 class="text-2xl font-bold text-[#3D3C3A] mb-6">Mon Panier</h1>
+  <section class="px-8 w-full">
+    <h1 class="mt-8 text-2xl font-bold text-[#3D3C3A] mb-6">Mon Panier</h1>
     
     <!-- Cart items will go here -->
     <div class="space-y-4 w-full ">
