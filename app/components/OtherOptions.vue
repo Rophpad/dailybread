@@ -1,19 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { accompaniments } from '~/data/datas'
 
 const isOpen = ref(false)
 const selectedOptions = ref<string[]>([])
 
-const options = [
-  { id: 'butter', label: 'Extra Butter', price: '+$0.50' },
-  { id: 'jam', label: 'Strawberry Jam', price: '+$0.75' },
-  { id: 'honey', label: 'Organic Honey', price: '+$1.00' },
-  { id: 'cheese', label: 'Cream Cheese', price: '+$0.80' },
-  { id: 'nutella', label: 'Nutella Spread', price: '+$1.25' },
-  { id: 'slice', label: 'Pre-sliced', price: '+$0.25' },
-  { id: 'toasted', label: 'Toasted', price: 'Free' },
-  { id: 'bag', label: 'Gift Bag', price: '+$0.30' }
-]
+const options = accompaniments.map(item => ({
+  id: item.name.toLowerCase().replace(/\s+/g, '-'),
+  label: item.name,
+  price: item.price
+}))
 
 const toggleOptions = () => {
   isOpen.value = !isOpen.value
@@ -34,7 +30,7 @@ const isSelected = (optionId: string) => {
 </script>
 
 <template>
-  <div class="w-full max-w-sm mx-auto">
+  <div class="w-full">
     <!-- Toggle Button -->
     <button 
       @click="toggleOptions"

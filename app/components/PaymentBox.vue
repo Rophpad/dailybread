@@ -57,7 +57,7 @@ const handlePayment = () => {
 </script>
 
 <template>
-  <div class="w-full max-w-sm mx-auto bg-white rounded-xl border border-gray-200 shadow-sm p-4">
+  <div class="w-full  bg-white rounded-xl border border-gray-200 shadow-sm p-4">
     <!-- Order Summary Header -->
     <h3 class="text-lg font-semibold text-[#3D3C3A] mb-4">Order Summary</h3>
     

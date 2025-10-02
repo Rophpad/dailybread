@@ -16,6 +16,8 @@ export default defineNuxtConfig({
     "@nuxt/test-utils",
     "@nuxt/ui",
     "@nuxtjs/google-fonts",
+    "@pinia/nuxt",
+    '@pinia-plugin-persistedstate/nuxt'
   ],
   googleFonts: {
     families: {

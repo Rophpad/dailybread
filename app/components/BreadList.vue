@@ -1,78 +1,65 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import { breads } from "../data/datas";
+import QuantitySelector from "./QuantitySelector.vue";
 
-const items = [
-  { image: "/pain.png", name: "Sourdough", price: "$3.50" },
-  {
-    image: "https://picsum.photos/300/200?random=2",
-    name: "Baguette",
-    price: "$2.00",
-  },
-  {
-    image: "https://picsum.photos/300/200?random=3",
-    name: "Rye Bread",
-    price: "$4.00",
-  },
-  {
-    image: "https://picsum.photos/300/200?random=4",
-    name: "Ciabatta",
-    price: "$3.00",
-  },
-  {
-    image: "https://picsum.photos/300/200?random=5",
-    name: "Focaccia",
-    price: "$3.75",
-  },
-  {
-    image: "https://picsum.photos/300/200?random=6",
-    name: "Whole Wheat",
-    price: "$2.50",
-  },
-];
-
+// State
 const currentIndex = ref(0);
 const carouselRef = ref<HTMLElement>();
 
+// Computed
+const items = computed(() => breads);
+const currentItem = computed(() => items.value[currentIndex.value]);
+const slideTransform = computed(() => `translateX(-${currentIndex.value * 100}%)`);
+
+// Navigation methods
 const nextSlide = () => {
-  currentIndex.value = (currentIndex.value + 1) % items.length;
+  currentIndex.value = (currentIndex.value + 1) % items.value.length;
 };
 
 const prevSlide = () => {
   currentIndex.value =
-    currentIndex.value === 0 ? items.length - 1 : currentIndex.value - 1;
+    currentIndex.value === 0 ? items.value.length - 1 : currentIndex.value - 1;
 };
 
 const goToSlide = (index: number) => {
   currentIndex.value = index;
 };
+
+// Cart methods
+const toggleCart = () => {
+  if (currentItem.value) {
+    currentItem.value.addedToCart = !currentItem.value.addedToCart;
+  }
+};
+
+// Quantity handler
+const updateQuantity = (newQuantity: number) => {
+  if (currentItem.value) {
+    currentItem.value.quantity = newQuantity;
+  }
+};
 </script>
 
 <template>
-  <div class="relative w-full max-w-sm mx-auto">
+  <div class="relative w-full">
     <!-- Main carousel container -->
-    <div class="relative h-80 overflow-hidden rounded-2xl bg- shadow-xl">
+    <div class="relative h-80 overflow-hidden rounded-2xl shadow-xl">
       <div
         ref="carouselRef"
-        class="flex transition-transform duration-500 ease-in-out h-full"
-        :style="{ transform: `translateX(-${currentIndex * 100}%)` }"
+        class="flex h-full transition-transform duration-500 ease-in-out"
+        :style="{ transform: slideTransform }"
       >
         <div
           v-for="(item, index) in items"
           :key="index"
-          class="w-full flex-shrink-0 relative"
+          class="relative w-full flex-shrink-0"
         >
-          <!-- Image -->
           <img
             :src="item.image"
             :alt="item.name"
-            class="w-full h-full object-cover bg-[#FAF9F0]/90 backdrop-blur-md"
+            class="h-full w-full rounded-2xl bg-[#FAF9F0]/90 object-contain shadow-lg"
           />
-
-          <!-- Content overlay -->
-          <!-- <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4">
-                        <h3 class="text-[#3D3C3A] text-lg font-semibold mb-1">{{ item.name }}</h3>
-                        <p class="text-[#8B4513] text-lg font-bold">{{ item.price }}</p>
-                    </div> -->
         </div>
       </div>
     </div>
@@ -80,10 +67,11 @@ const goToSlide = (index: number) => {
     <!-- Navigation arrows -->
     <button
       @click="prevSlide"
-      class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 text-gray-800 p-3 rounded-full hover:bg-white shadow-lg transition-all duration-200 hover:scale-110"
+      class="absolute left-4 top-1/2 -translate-y-1/2 transform rounded-full bg-white/90 p-3 text-gray-800 shadow-lg transition-all duration-200 hover:scale-110 hover:bg-white"
+      aria-label="Previous slide"
     >
       <svg
-        class="w-5 h-5"
+        class="h-5 w-5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -93,16 +81,17 @@ const goToSlide = (index: number) => {
           stroke-linejoin="round"
           stroke-width="2"
           d="M15 19l-7-7 7-7"
-        ></path>
+        />
       </svg>
     </button>
 
     <button
       @click="nextSlide"
-      class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 text-gray-800 p-3 rounded-full hover:bg-white shadow-lg transition-all duration-200 hover:scale-110"
+      class="absolute right-4 top-1/2 -translate-y-1/2 transform rounded-full bg-white/90 p-3 text-gray-800 shadow-lg transition-all duration-200 hover:scale-110 hover:bg-white"
+      aria-label="Next slide"
     >
       <svg
-        class="w-5 h-5"
+        class="h-5 w-5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -112,45 +101,59 @@ const goToSlide = (index: number) => {
           stroke-linejoin="round"
           stroke-width="2"
           d="M9 5l7 7-7 7"
-        ></path>
+        />
       </svg>
     </button>
 
     <!-- Dots indicator -->
-    <div class="flex justify-center mt-4 space-x-2">
+    <div class="mt-4 flex justify-center space-x-2">
       <button
         v-for="(item, index) in items"
         :key="index"
         @click="goToSlide(index)"
-        class="w-3 h-3 rounded-full transition-all duration-200"
+        :aria-label="`Go to slide ${index + 1}`"
+        class="h-3 w-3 rounded-full transition-all duration-200"
         :class="
           currentIndex === index
-            ? 'bg-[#8B4513] scale-110'
+            ? 'scale-110 bg-[#8B4513]'
             : 'bg-[#8B4513]/10 hover:bg-gray-400'
         "
       />
     </div>
 
-    <!-- Current item info below carousel -->
-    <div class="mt-4 bg-white rounded-2xl shadow-md p-6 border border-gray-100">
+    <!-- Current item info -->
+    <div
+      v-if="currentItem"
+      class="mt-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-md"
+    >
       <!-- Product Info -->
-      <div class="text-center mb-6">
-        <h3 class="text-2xl font-bold text-[#3D3C3A] mb-2">
-          {{ items[currentIndex]?.name }}
+      <div class="mb-6 text-center">
+        <h3 class="mb-2 text-2xl font-bold text-[#3D3C3A]">
+          {{ currentItem.name }}
         </h3>
         <p class="text-2xl font-bold text-[#8B4513]">
-          {{ items[currentIndex]?.price }}
+          {{ currentItem.price }}
         </p>
       </div>
 
       <!-- Quantity Selector -->
-      <QuantitySelector class="mb-6" />
+      <QuantitySelector 
+        class="mb-6" 
+        :modelValue="currentItem.quantity || 1"
+        @update:modelValue="updateQuantity"
+      />
 
       <!-- Add to Cart Button -->
       <button
-        class="w-full py-3 text-base font-semibold bg-[#8B4513] text-white rounded-xl shadow-md hover:bg-[#A0522D] active:scale-98 transition-all duration-200"
+        @click="toggleCart"
+        class="w-full rounded-xl py-3 text-base font-semibold shadow-md transition-all duration-200 active:scale-98"
+        :class="
+          currentItem.addedToCart
+            ? 'bg-[#f38168] text-white hover:bg-[#f38168]'
+            : 'bg-[#8B4513] text-white hover:bg-[#A0522D]'
+        "
       >
-        Ajouter au panier
+        {{ currentItem.addedToCart ? 'Retirer du panier' : 'Ajouter au panier' }}
       </button>
     </div>
   </div>

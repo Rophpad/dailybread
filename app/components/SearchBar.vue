@@ -30,7 +30,7 @@ const handleClear = () => {
 </script>
 
 <template>
-  <div class="w-full max-w-md mx-auto">
+  <div class="w-full">
     <!-- Search Label -->
     <!-- <label class="block text-sm font-medium text-[#3D3C3A] mb-2">
       Search for bread
