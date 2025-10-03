@@ -41,19 +41,21 @@
                 class="w-16 h-16 object-cover rounded-lg"
               />
               <div>
-                <h3 class="font-semibold text-[#3D3C3A]">{{ item.product.name }}</h3>
+                <h3 class="font-semibold text-[#3D3C3A]">
+                  {{ item.product.name }}
+                </h3>
                 <p class="text-sm text-gray-500">{{ item.product.price }}</p>
               </div>
             </div>
             <div class="flex items-center space-x-2">
-              <button 
+              <button
                 @click="decreaseQuantity(item)"
                 class="w-8 h-8 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
               >
                 -
               </button>
               <span>{{ item.quantity }}</span>
-              <button 
+              <button
                 @click="increaseQuantity(item)"
                 class="w-8 h-8 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
               >
@@ -80,9 +82,10 @@
             </span>
           </div>
           <button
+            @click="handleOrder"
             class="w-full py-3 bg-[#FDE4BA] text-[#3D3C3A] rounded-xl font-semibold hover:bg-[#fcd58a] transition"
           >
-           Commander
+            Commander
           </button>
         </div>
       </div>
@@ -91,31 +94,37 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useCartStore } from "~/stores/cart"
+import { computed } from "vue";
+import { useCartStore } from "~/stores/cart";
+import { useGlobalStore } from "~/stores/global";
 
-const cartStore = useCartStore()
+const cartStore = useCartStore();
+const globalStore = useGlobalStore();
 
 // Make cartItems reactive using computed
-const cartItems = computed(() => cartStore.cartItems)
+const cartItems = computed(() => cartStore.cartItems);
 
 // Make total reactive using computed
-const total = computed(() => cartStore.getTotalPrice())
+const total = computed(() => cartStore.getTotalPrice());
 
 // Add quantity management functions
 const increaseQuantity = (item) => {
-  cartStore.addToCart(item.product, item.quantity + 1)
-}
+  cartStore.addToCart(item.product, item.quantity + 1);
+};
 
 const decreaseQuantity = (item) => {
   if (item.quantity > 1) {
-    cartStore.addToCart(item.product, item.quantity - 1)
+    cartStore.addToCart(item.product, item.quantity - 1);
   } else {
-    cartStore.removeFromCart(item.id)
+    cartStore.removeFromCart(item.id);
   }
-}
+};
+
+const handleOrder = () => {
+  globalStore.handleCommand(cartItems.value, total.value);
+};
 
 definePageMeta({
   title: "Mon Panier - DailyBread",
-})
+});
 </script>

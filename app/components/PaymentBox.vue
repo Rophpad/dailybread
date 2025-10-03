@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useCartStore } from "@/stores/cart";
+import { useGlobalStore } from "@/stores/global";
 
 const cartStore = useCartStore();
-const cartItems = cartStore.getOrderSummary();
+const globalStore = useGlobalStore();
+
+const orderSummary = cartStore.getOrderSummary();
 
 const subtotal = computed(() => cartStore.getTotalPrice());
 const tax = computed(() => subtotal.value * 0.08); // Assuming 8%
@@ -13,11 +16,7 @@ const total = computed(() => subtotal.value + tax.value);
 const emit = defineEmits(["payment"]);
 
 const handlePayment = () => {
-  emit("payment", {
-    subtotal: subtotal.value,
-    tax: tax.value,
-    total: total.value,
-  });
+  globalStore.handleCommand(cartStore.cartItems, total.value);
 };
 </script>
 
@@ -30,7 +29,7 @@ const handlePayment = () => {
     <div class="space-y-2 mb-4">
       <!-- Bread -->
       <div
-        v-for="(item, index) in cartItems"
+        v-for="(item, index) in orderSummary"
         :key="item.id || index"
         class="flex justify-between items-center"
       >
@@ -62,12 +61,12 @@ const handlePayment = () => {
       </div>
 
       <!-- Tax -->
-      <div class="flex justify-between items-center">
+      <!-- <div class="flex justify-between items-center">
         <span class="text-sm text-gray-600">Tax (8%)</span>
         <span class="text-sm font-medium text-[#3D3C3A]">
           ${{ tax.toFixed(2) }}
         </span>
-      </div>
+      </div> -->
 
       <!-- Divider -->
       <hr class="my-3 border-gray-200" />
