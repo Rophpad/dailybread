@@ -24,6 +24,7 @@ const carouselRef = ref<HTMLElement>();
 const items = computed(() =>
   breads.map((bread) => ({
     ...bread,
+    type: bread.type as "bread" | "accompaniment" | undefined,
   }))
 );
 const currentItem = computed(() => items.value[currentIndex.value]);
