@@ -122,7 +122,7 @@ export const useGlobalStore = defineStore("global", () => {
     const formattedOrderText = orderText
       .replace(/ /g, "%20")
       .replace(/\n/g, "%0A");
-    const phoneNumber = "+2290196908483"; // Replace with actual phone number
+    const phoneNumber = "+22996908483"; // Replace with actual phone number
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
       formattedOrderText
     )}`;
