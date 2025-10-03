@@ -16,12 +16,12 @@
       </div>
 
       <!-- Cart items -->
-      <div v-else>
+      <div v-else class="space-y-4">
         <!-- Cart items list -->
         <div
           v-for="item in cartItems"
           :key="item.id"
-          class="bg-white rounded-xl p-4 shadow-sm relative"
+          class="bg-white rounded-xl p-4 shadow-sm relative "
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
@@ -44,7 +44,7 @@
           <!-- Floating remove button -->
           <button
             @click="removeFromCart(item.id)"
-            class="absolute -top-4 -left-4 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition"
+            class="absolute -top-2 -left-2 size-6 flex items-center justify-center bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition"
             aria-label="Retirer du panier"
           >
             &times;

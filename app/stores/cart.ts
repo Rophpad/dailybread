@@ -35,6 +35,15 @@ export const useCartStore = defineStore(
       cartItems.value = [];
     };
 
+    const getOrderSummary = () => {
+      return cartItems.value.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        totalPrice: (parseFloat(item.price.replace("$", "")) * item.quantity).toFixed(2),
+      }));
+    }
+
     const getTotalPrice = () => {
       return cartItems.value.reduce((total, item) => {
         const priceNumber = parseFloat(item.price.replace("$", ""));
@@ -48,6 +57,7 @@ export const useCartStore = defineStore(
       addToCart,
       removeFromCart,
       clearCart,
+      getOrderSummary,
       getTotalPrice,
     };
   },
