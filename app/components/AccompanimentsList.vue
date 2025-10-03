@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useProductStore } from "~/stores/product";
+import { useCartStore } from "~/stores/cart";
 
 // Store
 const productsStore = useProductStore();
 productsStore.getAllAccompaniments();
 const accompaniments = productsStore.accompaniments;
+
+const cartStore = useCartStore();
 
 const isOpen = ref(false);
 const selectedOptions = ref<string[]>([]);
@@ -14,6 +17,7 @@ const options = accompaniments.map((item) => ({
   id: item.name.toLowerCase().replace(/\s+/g, "-"),
   label: item.name,
   price: item.price,
+  originalItem: item // Keep reference to original item
 }));
 
 const toggleOptions = () => {
@@ -22,16 +26,67 @@ const toggleOptions = () => {
 
 const toggleOption = (optionId: string) => {
   const index = selectedOptions.value.indexOf(optionId);
+  const option = options.find(opt => opt.id === optionId);
+  
   if (index > -1) {
+    // Remove from selectedOptions
     selectedOptions.value.splice(index, 1);
+    
+    // Remove from cart
+    if (option) {
+      // Find the cart item by matching the product
+      const cartItems = cartStore.getCartItems();
+      const cartItem = cartItems.find(item => 
+        item.product.name === option.originalItem.name
+      );
+      if (cartItem) {
+        cartStore.removeFromCart(cartItem.id);
+      }
+    }
   } else {
+    // Add to selectedOptions
     selectedOptions.value.push(optionId);
+    
+    // Add to cart
+    if (option) {
+      cartStore.addToCart({ ...option.originalItem, type: "accompaniment" }, 1);
+    }
   }
 };
 
 const isSelected = (optionId: string) => {
   return selectedOptions.value.includes(optionId);
 };
+
+// Watch for changes in selectedOptions and update cart
+watch(selectedOptions, (newSelectedOptions, oldSelectedOptions) => {
+  // Handle additions
+  const added = newSelectedOptions.filter(opt => !oldSelectedOptions?.includes(opt));
+  added.forEach(optionId => {
+    const option = options.find(opt => opt.id === optionId);
+    if (option) {
+      cartStore.addToCart({ ...option.originalItem, type: "accompaniment" }, 1);
+    }
+  });
+
+  // Handle removals
+  if (oldSelectedOptions) {
+    const removed = oldSelectedOptions.filter(opt => !newSelectedOptions.includes(opt));
+    removed.forEach(optionId => {
+      const option = options.find(opt => opt.id === optionId);
+      if (option) {
+        // Find and remove from cart
+        const cartItems = cartStore.getCartItems();
+        const cartItem = cartItems.find(item => 
+          item.product.name === option.originalItem.name
+        );
+        if (cartItem) {
+          cartStore.removeFromCart(cartItem.id);
+        }
+      }
+    });
+  }
+}, { deep: true });
 </script>
 
 <template>
@@ -120,7 +175,7 @@ const isSelected = (optionId: string) => {
       v-if="selectedOptions.length > 0"
       class="mt-3 p-3 bg-[#FDE4BA]/50 rounded-lg"
     >
-      <p class="text-sm text-[#3D3C3A] font-medium mb-1">Selected:</p>
+      <p class="text-sm text-[#3D3C3A] font-medium mb-1">Added to Cart:</p>
       <div class="flex flex-wrap gap-1">
         <span
           v-for="optionId in selectedOptions"

@@ -35,6 +35,7 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
               <img
+                v-if="item.product.type === 'bread'"
                 :src="item.product.image"
                 :alt="item.product.name"
                 class="w-16 h-16 object-cover rounded-lg"
