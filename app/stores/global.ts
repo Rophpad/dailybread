@@ -124,7 +124,7 @@ export const useGlobalStore = defineStore("global", () => {
       .replace(/\n/g, "%0A");
     const phoneNumber = "+22996908483"; // Replace with actual phone number
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
-      formattedOrderText
+      orderText
     )}`;
     window.open(whatsappUrl, "_blank");
   };
