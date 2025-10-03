@@ -14,7 +14,7 @@
         </div> -->
         <a class="cursor-pointer" href="/">
           <h1 class="text-lg font-bold text-[#3D3C3A]">dailybread</h1>
-          <p class="text-xs text-gray-500">zanzan pin</p>
+          <p class="text-xs text-gray-500">Fresh & Delicious</p>
         </a>
       </div>
 

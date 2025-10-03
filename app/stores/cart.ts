@@ -46,7 +46,7 @@ export const useCartStore = defineStore(
             name: item.product.name,
             quantity: item.quantity,
             totalPrice: (
-              parseFloat(item.product.price.replace("$", "")) * item.quantity
+              parseFloat(item.product.price.replace(" FCFA", "")) * item.quantity
             ).toFixed(2),
           }));
       } catch (error) {

@@ -57,7 +57,7 @@ export const useGlobalStore = defineStore("global", () => {
         orderText += `${index + 1}. ${item.product.name}\n`;
         orderText += `   Quantité: ${item.quantity}\n`;
         orderText += `   Prix unitaire: ${item.product.price}\n`;
-        orderText += `   Sous-total: $${itemTotal}\n\n`;
+        orderText += `   Sous-total: ${itemTotal} FCFA\n\n`;
       });
     }
 
@@ -65,17 +65,17 @@ export const useGlobalStore = defineStore("global", () => {
       orderText += `🥯 ACCOMPAGNEMENTS:\n`;
       accompaniments.forEach((item, index) => {
         const itemTotal = (
-          parseFloat(item.product.price.replace("$", "")) * item.quantity
+          parseFloat(item.product.price.replace(" FCFA", "")) * item.quantity
         ).toFixed(2);
         orderText += `${index + 1}. ${item.product.name}\n`;
         orderText += `   Quantité: ${item.quantity}\n`;
         orderText += `   Prix: ${item.product.price}\n`;
-        orderText += `   Sous-total: $${itemTotal}\n\n`;
+        orderText += `   Sous-total: ${itemTotal} FCFA\n\n`;
       });
     }
 
     orderText += `${"-".repeat(30)}\n`;
-    orderText += `💰 TOTAL: $${total.toFixed(2)}\n`;
+    orderText += `💰 TOTAL: ${total.toFixed(2)} FCFA\n`;
     orderText += `${"-".repeat(30)}\n`;
     orderText += `\n📞 Merci pour votre commande!\n`;
     orderText += `DailyBread - Pain frais tous les jours`;

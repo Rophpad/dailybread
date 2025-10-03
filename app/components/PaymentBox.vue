@@ -9,7 +9,7 @@ const globalStore = useGlobalStore();
 const orderSummary = cartStore.getOrderSummary();
 
 const subtotal = computed(() => cartStore.getTotalPrice());
-const tax = computed(() => subtotal.value * 0.08); // Assuming 8%
+const tax = computed(() => subtotal.value * 0); // Assuming 0%
 const total = computed(() => subtotal.value + tax.value);
 
 // Emit payment event
@@ -37,7 +37,7 @@ const handlePayment = () => {
           {{ item.name }} ({{ item.quantity || 1 }}x)
         </span>
         <span class="text-sm font-medium text-[#3D3C3A]">
-          ${{ item.totalPrice }}
+          {{ item.totalPrice }} FCFA
         </span>
       </div>
 
@@ -56,7 +56,7 @@ const handlePayment = () => {
       <div class="flex justify-between items-center">
         <span class="text-sm text-gray-600">Subtotal</span>
         <span class="text-sm font-medium text-[#3D3C3A]">
-          ${{ subtotal.toFixed(2) }}
+          {{ subtotal.toFixed(2) }} FCFA
         </span>
       </div>
 
@@ -75,7 +75,7 @@ const handlePayment = () => {
       <div class="flex justify-between items-center">
         <span class="text-base font-semibold text-[#3D3C3A]">Total</span>
         <span class="text-lg font-bold text-[#3D3C3A]">
-          ${{ total.toFixed(2) }}
+          {{ total.toFixed(2) }} FCFA
         </span>
       </div>
     </div>

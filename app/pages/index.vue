@@ -1,8 +1,7 @@
 <template>
   <section class="px-8 w-full">
     <h2 class="mt-8 text-center text-xl font-bold text-[#3D3C3A]" >
-      Get your daily bread <br />
-      easily, everyday and everywhere!
+      Votre pain quotidien, <br /> simplement, partout, tous les jours !
     </h2>
     <SearchBar class="mt-8" />
     <BreadList class="mt-8" />

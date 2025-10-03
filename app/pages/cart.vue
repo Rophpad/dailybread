@@ -78,7 +78,7 @@
           <div class="flex justify-between items-center mb-4">
             <span class="text-lg font-semibold text-[#3D3C3A]">Total</span>
             <span class="text-lg font-bold text-[#3D3C3A]">
-              ${{ total.toFixed(2) }}
+              {{ total.toFixed(2) }} FCFA
             </span>
           </div>
           <button
