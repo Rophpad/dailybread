@@ -104,7 +104,7 @@ export const useGlobalStore = defineStore("global", () => {
   };
   const sendViaMail = (orderText: string) => {
     // Recipient email address (replace with actual email)
-    const recipientEmail = "contact@dailybread.com"; // Replace with your email
+    const recipientEmail = "zetekas.pro@gmail.com"; // Replace with your email
 
     // Subject and body
     const subject = encodeURIComponent("Commande DailyBread");
