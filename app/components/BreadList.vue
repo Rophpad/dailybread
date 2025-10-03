@@ -1,15 +1,20 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useProductsStore } from "~/stores/products";
+import { useProductStore } from "~/stores/product";
 import { useCartStore } from "~/stores/cart";
+import { useGlobalStore } from "~/stores/global";
 import QuantitySelector from "./QuantitySelector.vue";
+import type { Product } from "~/types/product";
 
 // Store
-const productsStore = useProductsStore();
+const productsStore = useProductStore();
 productsStore.getAllBreads();
+
 const breads = productsStore.breads;
 
 const cartStore = useCartStore();
+
+const globalStore = useGlobalStore();
 
 // State
 const currentIndex = ref(0);
@@ -17,11 +22,8 @@ const carouselRef = ref<HTMLElement>();
 
 // Computed
 const items = computed(() =>
-  breads.map(bread => ({
+  breads.map((bread) => ({
     ...bread,
-    inTheCart: cartStore.cartItems.some(item => item.id === bread.id),
-    quantity:
-      cartStore.cartItems.find(item => item.id === bread.id)?.quantity || bread.quantity || 1
   }))
 );
 const currentItem = computed(() => items.value[currentIndex.value]);
@@ -32,11 +34,13 @@ const slideTransform = computed(
 // Navigation methods
 const nextSlide = () => {
   currentIndex.value = (currentIndex.value + 1) % items.value.length;
+  globalStore.resetProductQuantity();
 };
 
 const prevSlide = () => {
   currentIndex.value =
     currentIndex.value === 0 ? items.value.length - 1 : currentIndex.value - 1;
+  globalStore.resetProductQuantity();
 };
 
 const goToSlide = (index: number) => {
@@ -44,23 +48,15 @@ const goToSlide = (index: number) => {
 };
 
 // Cart methods
-const toggleCart = () => {
-  if (currentItem.value) {
-    if (!currentItem.value.inTheCart) {
-      cartStore.addToCart(currentItem.value);
-    } else {
-      cartStore.removeFromCart(currentItem.value.id);
-      productsStore.setInTheCartStatus(currentItem.value.id);
-    }
-  }
-  console.log(cartStore.cartItems, currentItem.value?.inTheCart);
+const handleAddToCart = (item: Product) => {
+  cartStore.addToCart(item, globalStore.productQuantity);
+  globalStore.newProductAdded = true;
+  console.log(cartStore.getCartItems());
 };
 
 // Quantity handler
 const updateQuantity = (newQuantity: number) => {
-  if (currentItem.value) {
-    currentItem.value.quantity = newQuantity;
-  }
+  globalStore.productQuantity = newQuantity;
 };
 </script>
 
@@ -162,21 +158,16 @@ const updateQuantity = (newQuantity: number) => {
       <!-- Quantity Selector -->
       <QuantitySelector
         class="mb-6"
-        :modelValue="currentItem.quantity || 1"
+        :modelValue="globalStore.productQuantity"
         @update:modelValue="updateQuantity"
       />
 
       <!-- Add to Cart Button -->
       <button
-        @click="toggleCart"
-        class="w-full rounded-xl py-3 text-base font-semibold shadow-md transition-all duration-200 active:scale-98"
-        :class="
-          currentItem.inTheCart
-            ? 'bg-[#f38168] text-white hover:bg-[#f38168]'
-            : 'bg-[#8B4513] text-white hover:bg-[#A0522D]'
-        "
+        @click="handleAddToCart(currentItem)"
+        class="w-full rounded-xl py-3 text-base font-semibold shadow-md transition-all duration-200 active:scale-98 bg-[#8B4513] text-white hover:bg-[#A0522D]"
       >
-        {{ currentItem.inTheCart ? "Retirer du panier" : "Ajouter au panier" }}
+        {{ "Ajouter au panier" }}
       </button>
     </div>
   </div>

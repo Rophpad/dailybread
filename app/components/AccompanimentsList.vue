@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { useProductsStore } from "~/stores/products";
+import { useProductStore } from "~/stores/product";
 
 // Store
-const productsStore = useProductsStore();
+const productsStore = useProductStore();
 productsStore.getAllAccompaniments();
 const accompaniments = productsStore.accompaniments;
 
@@ -41,7 +41,7 @@ const isSelected = (optionId: string) => {
       @click="toggleOptions"
       class="w-full flex items-center justify-between p-4 bg-white rounded-xl border border-gray-200 shadow-sm hover:bg-gray-50 transition"
     >
-      <span class="text-[#3D3C3A] font-semibold">Other Options</span>
+      <span class="text-[#3D3C3A] font-semibold">Accompaniments List</span>
       <svg
         class="w-5 h-5 text-[#3D3C3A] transition-transform duration-200"
         :class="{ 'rotate-180': isOpen }"

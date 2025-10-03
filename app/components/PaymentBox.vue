@@ -86,7 +86,7 @@ const handlePayment = () => {
       @click="handlePayment"
       class="w-full px-4 py-3 rounded-xl bg-[#FDE4BA] text-[#3D3C3A] font-semibold hover:bg-[#fcd58a] transition-all duration-200 shadow-sm hover:shadow-md"
     >
-      Pay Now
+      Commander
     </button>
 
     <!-- Payment Methods -->

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { accompanimentsList, breadsList } from "~/data/datas";
 
-export const useProductsStore = defineStore("products", () => {
+export const useProductStore = defineStore("product", () => {
   const breads = ref(breadsList);
   const accompaniments = ref(accompanimentsList);
   const getAllBreads = () => {
@@ -20,15 +20,6 @@ export const useProductsStore = defineStore("products", () => {
     );
   };
 
-  const setInTheCartStatus = (id: number) => {
-    const item =
-      breads.value.find((bread) => bread.id === id) ||
-      accompaniments.value.find((accompaniment) => accompaniment.id === id);
-    if (item) {
-      item.inTheCart = !item.inTheCart;
-    }
-  };
-
   return {
     breads,
     accompaniments,
@@ -36,6 +27,5 @@ export const useProductsStore = defineStore("products", () => {
     getOneBread,
     getAllAccompaniments,
     getOneAccompaniment,
-    setInTheCartStatus,
   };
 });

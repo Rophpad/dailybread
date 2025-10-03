@@ -6,7 +6,7 @@
     </h2>
     <SearchBar class="mt-8" />
     <BreadList class="mt-8" />
-    <OtherOptions class="mt-8" />
+    <AccompanimentsList class="mt-8" />
     
     <PaymentBox
       :bread-price="3.5"

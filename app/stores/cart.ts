@@ -1,33 +1,34 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import type { CartItem } from "~/types/cartItem";
 import type { Product } from "~/types/product";
 
 export const useCartStore = defineStore(
   "cart",
   () => {
-    const cartItems = ref<Product[]>([]);
+    const cartItems = ref<CartItem[]>([]);
+    const index = ref(0);
 
     const getCartItems = () => {
       return cartItems.value;
     };
 
-    const addToCart = (item: Product) => {
-      item.inTheCart = true;
-      const index = cartItems.value.findIndex(
-        (cartItem) => cartItem.id === item.id
+    const addToCart = (item: Product, quantity: number) => {
+      const existingItem = cartItems.value.find(
+        (ci) => ci.product?.id === item.id
       );
-      if (index !== -1) {
-        cartItems.value[index] = { ...cartItems.value[index], ...item };
+      if (existingItem) {
+        existingItem.quantity = quantity;
       } else {
-        cartItems.value.push({ ...item });
+        cartItems.value.push({
+          id: index.value++,
+          product: item,
+          quantity,
+        });
       }
     };
 
     const removeFromCart = (id: number) => {
-      const item = cartItems.value.find((item) => item.id === id);
-      if (item) {
-        item.inTheCart = false;
-      }
       cartItems.value = cartItems.value.filter((item) => item.id !== id);
     };
 
@@ -36,19 +37,37 @@ export const useCartStore = defineStore(
     };
 
     const getOrderSummary = () => {
-      return cartItems.value.map((item) => ({
-        id: item.id,
-        name: item.name,
-        quantity: item.quantity,
-        totalPrice: (parseFloat(item.price.replace("$", "")) * item.quantity).toFixed(2),
-      }));
-    }
+      try {
+        if (cartItems.value.length === 0) return [];
+        return cartItems.value
+          .filter(item => item?.product?.name) // Safe navigation
+          .map((item) => ({
+            id: item.id,
+            name: item.product.name,
+            quantity: item.quantity,
+            totalPrice: (
+              parseFloat(item.product.price.replace("$", "")) * item.quantity
+            ).toFixed(2),
+          }));
+      } catch (error) {
+        console.error('Error in getOrderSummary:', error);
+        return [];
+      }
+    };
 
     const getTotalPrice = () => {
-      return cartItems.value.reduce((total, item) => {
-        const priceNumber = parseFloat(item.price.replace("$", ""));
-        return total + priceNumber * item.quantity;
-      }, 0);
+      try {
+        if (cartItems.value.length === 0) return 0;
+        return cartItems.value
+          .filter(item => item?.product?.price) // Safe navigation
+          .reduce((total, item) => {
+            const priceNumber = parseFloat(item.product.price.replace("$", ""));
+            return total + priceNumber * item.quantity;
+          }, 0);
+      } catch (error) {
+        console.error('Error in getTotalPrice:', error);
+        return 0;
+      }
     };
 
     return {
@@ -62,7 +81,6 @@ export const useCartStore = defineStore(
     };
   },
   {
-    // Add persistence configuration
     persist: {
       key: "dailybread-cart",
       storage: persistedState.localStorage,
