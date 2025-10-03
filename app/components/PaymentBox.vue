@@ -18,6 +18,10 @@ const emit = defineEmits(["payment"]);
 const handlePayment = () => {
   globalStore.handleCommand(cartStore.cartItems, total.value);
 };
+
+const handleOrder = () => {
+ 
+};
 </script>
 
 <template>

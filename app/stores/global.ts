@@ -30,7 +30,8 @@ export const useGlobalStore = defineStore("global", () => {
     downloadOrderFile(orderText);
 
     // Send via Mail
-    sendViaMail(orderText);
+    // sendViaMail(orderText);
+    sendViaWhatsApp(orderText);
   };
 
   const generateOrderText = (cartItems: CartItem[], total: number) => {
@@ -115,6 +116,17 @@ export const useGlobalStore = defineStore("global", () => {
 
     // Open default mail client
     window.open(mailtoUrl, "_blank");
+  };
+
+  const sendViaWhatsApp = (orderText: string) => {
+    const formattedOrderText = orderText
+      .replace(/ /g, "%20")
+      .replace(/\n/g, "%0A");
+    const phoneNumber = "+2290196908483"; // Replace with actual phone number
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(
+      formattedOrderText
+    )}`;
+    window.open(whatsappUrl, "_blank");
   };
 
   return {
