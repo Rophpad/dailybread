@@ -1,5 +1,5 @@
 <template>
-  <main class="flex flex-col items-center justify- min-h-screen">
+  <main class="flex flex-col items-center justify- min-h-screen border overflow-x-hidden">
     <section class="h-full w-full lg:w-1/3 flex flex-col items-center justify ">
       <AppHeader  class=" "/>
       <slot />
