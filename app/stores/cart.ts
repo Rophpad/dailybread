@@ -28,6 +28,13 @@ export const useCartStore = defineStore(
       }
     };
 
+    const isItemInCard = (itemId: number) => {
+      const existingItem = cartItems.value.find(
+        (ci) => ci.id === itemId
+      );
+      return existingItem ? true : false;
+    };
+
     const removeFromCart = (id: number) => {
       cartItems.value = cartItems.value.filter((item) => item.id !== id);
     };
@@ -40,17 +47,18 @@ export const useCartStore = defineStore(
       try {
         if (cartItems.value.length === 0) return [];
         return cartItems.value
-          .filter(item => item?.product?.name) // Safe navigation
+          .filter((item) => item?.product?.name) // Safe navigation
           .map((item) => ({
             id: item.id,
             name: item.product.name,
             quantity: item.quantity,
             totalPrice: (
-              parseFloat(item.product.price.replace(" FCFA", "")) * item.quantity
+              parseFloat(item.product.price.replace(" FCFA", "")) *
+              item.quantity
             ).toFixed(2),
           }));
       } catch (error) {
-        console.error('Error in getOrderSummary:', error);
+        console.error("Error in getOrderSummary:", error);
         return [];
       }
     };
@@ -59,13 +67,13 @@ export const useCartStore = defineStore(
       try {
         if (cartItems.value.length === 0) return 0;
         return cartItems.value
-          .filter(item => item?.product?.price) // Safe navigation
+          .filter((item) => item?.product?.price) // Safe navigation
           .reduce((total, item) => {
             const priceNumber = parseFloat(item.product.price.replace("$", ""));
             return total + priceNumber * item.quantity;
           }, 0);
       } catch (error) {
-        console.error('Error in getTotalPrice:', error);
+        console.error("Error in getTotalPrice:", error);
         return 0;
       }
     };
@@ -74,6 +82,7 @@ export const useCartStore = defineStore(
       cartItems,
       getCartItems,
       addToCart,
+      isItemInCard,
       removeFromCart,
       clearCart,
       getOrderSummary,

@@ -48,11 +48,11 @@
         </div>
 
         <!-- Menu/Close Button -->
-        <button
+        <!-- <button
           class="p-2 hover:bg-[#8B4513]/10 rounded-xl transition-all duration-200 active:scale-95"
           @click="toggleMenu"
         >
-          <!-- Menu Icon -->
+          
           <svg
             v-if="!isMenuOpen"
             xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +64,7 @@
             <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
           </svg>
 
-          <!-- Close Icon -->
+          
           <svg
             v-if="isMenuOpen"
             xmlns="http://www.w3.org/2000/svg"
@@ -77,12 +77,12 @@
               d="M18.3 5.71a.996.996 0 0 0-1.41 0L12 10.59 7.11 5.7A.996.996 0 1 0 5.7 7.11L10.59 12 5.7 16.89a.996.996 0 1 0 1.41 1.41L12 13.41l4.89 4.89a.996.996 0 1 0 1.41-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"
             />
           </svg>
-        </button>
+        </button> -->
       </div>
     </header>
 
     <!-- Dropdown Menu -->
-    <div
+    <!-- <div
       v-if="isMenuOpen"
       class="w-full bg-white/95 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/50 z-50 overflow-hidden"
     >
@@ -152,7 +152,6 @@
             href="#"
             class="flex items-center space-x-3 p-3 rounded-xl hover:bg-[#FDE4BA]/30 transition-colors duration-200"
           >
-            <!-- Subscribe Icon -->
             <svg
               class="w-5 h-5 text-[#3D3C3A]"
               fill="none"
@@ -177,14 +176,7 @@
           </a>
         </nav>
       </div>
-    </div>
-
-    <!-- Backdrop -->
-    <!-- <div 
-      v-if="isMenuOpen"
-      @click="closeMenu"
-      class="fixed inset-0 bg-black/20 backdrop-blur-sm z-0"
-    ></div> -->
+    </div> -->
   </div>
 </template>
 

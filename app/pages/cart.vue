@@ -35,16 +35,16 @@
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
               <img
-                v-if="item.product.type === 'bread'"
-                :src="item.product.image"
-                :alt="item.product.name"
+                v-if="item?.product?.type === 'bread'"
+                :src="item?.product?.image"
+                :alt="item?.product?.name"
                 class="w-16 h-16 object-cover rounded-lg"
               />
               <div>
                 <h3 class="font-semibold text-[#3D3C3A]">
-                  {{ item.product.name }}
+                  {{ item?.product?.name }}
                 </h3>
-                <p class="text-sm text-gray-500">{{ item.product.price }}</p>
+                <p class="text-sm text-gray-500">{{ item?.product?.price }}</p>
               </div>
             </div>
             <div class="flex items-center space-x-2">
@@ -54,7 +54,7 @@
               >
                 -
               </button>
-              <span>{{ item.quantity }}</span>
+              <span>{{ item?.quantity }}</span>
               <button
                 @click="increaseQuantity(item)"
                 class="w-8 h-8 bg-gray-100 rounded-lg hover:bg-gray-200 transition"

@@ -146,6 +146,13 @@ const updateQuantity = (newQuantity: number) => {
       v-if="currentItem"
       class="mt-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-md"
     >
+      <div
+        v-if="cartStore.isItemInCard(currentItem.id)"
+        class="mb-4 rounded-lg bg-green-100 p-3 text-center text-sm font-medium text-green-800"
+      >
+        Cet article est déjà dans le panier. Vous pouvez mettre à jour la
+        quantité ci-dessous.
+      </div>
       <!-- Product Info -->
       <div class="mb-6 text-center">
         <h3 class="mb-2 text-2xl font-bold text-[#3D3C3A]">
@@ -166,9 +173,13 @@ const updateQuantity = (newQuantity: number) => {
       <!-- Add to Cart Button -->
       <button
         @click="handleAddToCart(currentItem)"
-        class="w-full rounded-xl py-3 text-base font-semibold shadow-md transition-all duration-200 active:scale-98 bg-[#8B4513] text-white hover:bg-[#A0522D]"
+        :class="`w-full rounded-xl py-3 text-base font-semibold shadow-md transition-all duration-200 active:scale-98 text-white bg-[#8B4513] hover:bg-[#A0522D]`"
       >
-        {{ "Ajouter au panier" }}
+        {{
+          cartStore.isItemInCard(currentItem.id)
+            ? "Mettre à jour le panier"
+            : "Ajouter au panier"
+        }}
       </button>
     </div>
   </div>
